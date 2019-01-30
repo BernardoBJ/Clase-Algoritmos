@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Numero Par</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
+
+	<script src="../js/jQuery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var max = 99;
+			var maxLength = 60;
+
+			$('#frmMain').submit(function(e){
+				e.preventDefault();
+
+				$('#console').val('');
+				var n = $('#N').val();
+				WriteConsole('Numero de elementos: ' + n);
+				WriteConsole('Numeros par: ');
+				for (var i = 1; i <= parseInt(n); i++) {
+					var val = $('#v' + i).val();
+					if (parseInt(val) % 2 == 0) {
+						WriteConsole(val);
+					}
+				}
+			});
+
+			$(document).on('click', '#btnGenerar', function (e) {
+				var n = parseInt($('#N').val());
+				if (isNaN(n)) {
+					alert('Valor de n invalido.');
+					$('#N').val('');
+					$('#N').focus();
+				} else {
+					if (n > maxLength) {
+						alert('Maximo numero de elementos excedido (' + maxLength + ').');
+						$('#N').val('');
+						$('#N').focus();
+					} else {
+						GenerarVector(n);
+					}
+				}
+			});
+
+			$(document).on('click', '#btnRandom', function (e) {
+				var n = parseInt($('#N').val());
+				for (var i = 1; i <= parseInt(n); i++) {
+					var rnd = Math.floor(Math.random() * max) + 1;
+					$('#v' + i).val(rnd);
+				}
+			});
+
+			function GenerarVector(n) {
+				$('#frmMain').empty();
+				var vec = '<div class="row">';
+				if (parseInt(n) >= 7) {
+					for (var i = 1; i <= parseInt(n); i++) {
+						vec += '<div class="col-md-1">';
+						vec += '	<input type="text" id="v' + i + '" name="v' + i + '" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+						vec += '</div>';
+					}
+				} else if (parseInt(n) == 6 || parseInt(n) == 5) {
+					for (var i = 1; i <= parseInt(n); i++) {
+						vec += '<div class="col-md-2">';
+						vec += '	<input type="text" id="v' + i + '" name="v' + i + '" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+						vec += '</div>';
+					}
+				} else if (parseInt(n) == 4) {
+					for (var i = 1; i <= parseInt(n); i++) {
+						vec += '<div class="col-md-3">';
+						vec += '	<input type="text" id="v' + i + '" name="v' + i + '" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+						vec += '</div>';
+					}
+				} else if (parseInt(n) == 3) {
+					for (var i = 1; i <= parseInt(n); i++) {
+						vec += '<div class="col-md-4">';
+						vec += '	<input type="text" id="v' + i + '" name="v' + i + '" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+						vec += '</div>';
+					}
+				} else if (parseInt(n) == 2) {
+					for (var i = 1; i <= parseInt(n); i++) {
+						vec += '<div class="col-md-6">';
+						vec += '	<input type="text" id="v' + i + '" name="v' + i + '" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+						vec += '</div>';
+					}
+				} else if (parseInt(n) == 1) {
+					vec += '<div class="col-md-12">';
+					vec += '	<input type="text" id="v1" name="v1" class="form-control text-center vec" pattern="^[0-9]{1,2}$" maxlength="2" autofocus required>';
+					vec += '</div>';
+				}
+				vec += '</div>';
+				$('#frmMain').append(vec);
+				$('#v1').focus();
+
+				var row = '<br><br><div class="row">';
+				row += '<div class="col-md-2 col-md-offset-4 text-right">';
+				row += '	<button type="button" class="btn btn-primary" id="btnRandom">';
+				row += '		<i class="fa fa-random"></i> Random';
+				row += '	</button>';
+				row += '</div>';
+				row += '<div class="col-md-2 text-right">';
+				row += '	<button type="submit" class="btn btn-success" id="btnProcess">';
+				row += '		<i class="fa fa-calculator"></i> Procesar';
+				row += '	</button>';
+				row += '</div>';
+				row += '</div>';
+				$('#frmMain').append(row);
+			}
+
+			function WriteConsole(text) {
+				$('#console').val($('#console').val() + text + '\n');
+				var textarea = document.getElementById('console');
+				textarea.scrollTop = textarea.scrollHeight;
+			}
+		});
+	</script>
+</head>
+<body>
+	<div class="row">
+		<div class="col-md-4 text-center text-primary">
+			<h4>Bernardo Alfonso Borunda Jaquez <small>314788</small></h4>
+		</div>
+		<div class="col-md-5 text-center text-primary">
+			<h4>Ingeniaría en ciencias de la computación <small>Analisis de algoritmos</small></h4>
+		</div>
+		<div class="col-md-3 text-center text-primary">
+			<h4>Numero Par</h4>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-md-1 text-center"><h4>Tamaño</h4></div>
+		<div class="col-md-1">
+			<input type="text" id="N" name="N" placeholder="n" class="form-control text-center" maxlength="2" autofocus>
+		</div>
+		<div class="col-md-1 text-right">
+			<button type="submit" class="btn btn-danger" id="btnGenerar">
+				<i class="fa fa-gear"></i> Generar
+			</button>
+		</div>
+	</div>
+	<br><br>
+	<div class="row">
+		<div class="col-md-8">
+			<form id="frmMain" method="post" data-disable="true" data-toggle="validator" role="form"></form>
+		</div>
+		<div class="col-md-3">
+			<textarea class="form-control" style="font-size: 10px" rows="17" id="console" readonly></textarea>
+		</div>
+	</div>
+</body>
+</html>
