@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Sort - Cartas</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/sweetalert2.min.css">
+
+	<script src="../js/sweetalert2.min.js"></script>
+	<script src="../js/jQuery-2.1.4.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var cartas = [];
+
+			// Generar cartas aleatoriamente
+			$('#btnRandom').click(function() {
+				$('#ArregloOrdenado').empty();
+				var numeroCartas = $('#NumeroCartas').val();
+				if (numeroCartas == '') {
+					swal('Valor invalido', 'Ingrese el numero de cartas a tomar', 'warning');
+				} else if (!$.isNumeric(numeroCartas)) {
+					swal('Valor invalido', 'El valor debe ser numerico', 'warning');
+				} else {
+					cartas = [];
+					for (var i = 0; i < parseInt(numeroCartas); i++) {
+						var rnd = Math.floor((Math.random() * 52) + 1);
+						if (rnd <= 13) {
+							rnd -= 0;
+							rnd += 100;
+						} else if (rnd <= 26) {
+							rnd -= 13;
+							rnd += 200;
+						} else if (rnd <= 39) {
+							rnd -= 26;
+							rnd += 300;
+						} else {
+							rnd -= 39;
+							rnd += 400;
+						}
+						cartas.push(rnd);
+					}
+					MostrarCartas(cartas, 'ArregloOriginal');
+				}
+			});
+
+			// Ordenar las cartas de manera ascendente
+			$('#btnOrdenarA').click(function() {
+				if (cartas.length > 0) {
+					MostrarCartas(OrdenarArreglo(cartas), 'ArregloOrdenado');
+				} else {
+					swal('Ninguna carta', 'No hay cartas para ordenar', 'warning');
+				}
+			});
+
+			// Ordenar las cartas de manera descendente
+			$('#btnOrdenarD').click(function() {
+				if (cartas.length > 0) {
+					MostrarCartas(InvertirArreglo(OrdenarArreglo(cartas)), 'ArregloOrdenado');
+				} else {
+					swal('Ninguna carta', 'No hay cartas para ordenar', 'warning');
+				}
+			});
+
+			// Mostrar arreglo de cartas en el contenedor indicado
+			function MostrarCartas(arr, id) {
+				// Limpiar contenedor
+				$('#' + id).empty();
+
+				// Procesar renglones
+				var data = '';
+				var rows = Math.floor(arr.length / 12) + 1;
+				for (var i = 0; i < rows; i++) {
+					data += '<div class="row">';
+					for (var j = (i * 12); j < (i + 1) * 12; j++) {
+						// Mostrar carta
+						if (arr[j] != null) {
+							var img = ImagenCarta(arr[j]);
+							var pfx = TipoCarta(arr[j]).substring(0,1);
+							var val = arr[j] - Math.floor(arr[j] / 100) * 100;
+							data += '<div class="col-md-1">';
+							data += '	<img src="../images/cartas/' + img + '" width="96px">';
+							data += '	<h5 style="margin:3px" class="text-center text-primary">&nbsp;&nbsp;&nbsp;&nbsp;' + pfx + val + '</h5>';
+							data += '</div>';
+						}
+					}
+					data += '</div>';
+				}
+				$('#' + id).append(data);
+			}
+
+			// Validar si un numero es divisor exacto de otro
+			function EsDivisor(val, mul) {
+				if (val < mul) {
+					return false;
+				} else {
+					var mod = val % mul;
+					if (val % mul == 0) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+
+			// Obtener la figura de la carta
+			function TipoCarta(val) {
+				var tipo = '';
+				var rango =  Math.floor(val / 100) * 100;
+				$('.mazo').each(function () {
+					if ($(this).attr('rango') == rango) {
+						tipo = $(this).attr('id');
+					}
+
+				});
+				return tipo;
+			}
+
+			// Obtener la imagen de la carta
+			function ImagenCarta(val) {
+				var num = val - Math.floor(val / 100) * 100;
+				return TipoCarta(val) + '_' + num + '.jpg';
+			}
+
+			// Invertir el arreglo indicado
+			function InvertirArreglo(arr) {
+				var arr2 = [];
+				for (var i = arr.length - 1; i >= 0; i--) {
+					arr2.push(arr[i]);
+				}
+				return arr2;
+			}
+
+			// Ordenar el arreglo
+			function OrdenarArreglo(arr) {
+				// --------------------------------------------------------------
+				// TODO: Hacer algoritmo de ordenamiento aqui
+				var temp;
+				for (var i = 0; i < cartas.length-1; i++) {
+					for(var j = 0; j < cartas.length-(i+1); j++) {
+						if (cartas[j] > cartas[j+1]) {
+							temp = cartas[j];
+							cartas[j] = cartas[j+1]; cartas[j+1] = temp;
+						}
+					}
+				}
+				// --------------------------------------------------------------
+				return arr;
+			}
+		});
+	</script>
+	</head>
+	<body>
+		<div class="row">
+			<div class="col-md-4 text-center text-primary">
+				<h4>Bernardo Alfonso Borunda Jaquez <small>314788</small></h4>
+				<h4>Angel Eidu Macias Saenz <small>320670</small></h4>
+			</div>
+			<div class="col-md-5 text-center text-primary">
+				<h4>Ingeniaría en ciencias de la computación <small>Analisis de algoritmos</small></h4>
+			</div>
+			<div class="col-md-3 text-center text-primary">
+				<h4>Sort <small>Cartas</small></h4>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-2 text-center">
+				<h4>Generar aleatoro</h4>
+			</div>
+			<div class="col-md-2 col-md-offset-2 text-center">
+				<h4>Ordenar</h4>
+			</div>
+			<div class="col-md-4 col-md-offset-2 text-center">
+				<h4>Prioridad de figuras =></h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-1">
+				<input type="text" id="NumeroCartas" value="12" class="form-control text-center">
+			</div>
+			<div class="col-md-1">
+				<button type="button" class="btn btn-block btn-primary" id="btnRandom">
+					<i class="fa fa-random"></i> Tomar
+				</button>
+			</div>
+			<div class="col-md-1 col-md-offset-2">
+				<button type="submit" class="btn btn-block btn-success" id="btnOrdenarA">
+					<i class="fa fa-sort-numeric-asc"></i> Asc
+				</button>
+			</div>
+			<div class="col-md-1">
+				<button type="submit" class="btn btn-block btn-success" id="btnOrdenarD">
+					<i class="fa fa-sort-numeric-desc"></i> Des
+				</button>
+			</div>
+			<div class="col-md-1 col-md-offset-2 text-center">
+				<img src="../images/cartas/Espada.png" width="48px" class="img-thumbnail mazo" id="Espada" rango="400">
+			</div>
+			<div class="col-md-1  text-center">
+				<img src="../images/cartas/Trebol.png" width="48px" class="img-thumbnail mazo" id="Trebol" rango="300">
+			</div>
+			<div class="col-md-1  text-center">
+				<img src="../images/cartas/Corazon.png" width="48px" class="img-thumbnail mazo" id="Corazon" rango="200">
+			</div>
+			<div class="col-md-1  text-center">
+				<img src="../images/cartas/Diamante.png" width="48px" class="img-thumbnail mazo" id="Diamante" rango="100">
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Cartas tomadas aleatoriamente</h4>
+				</div>
+			</div>
+			<div id="ArregloOriginal"></div>
+			<br>
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Cartas organizadas</h4>
+				</div>
+			</div>
+			<div id="ArregloOrdenado"></div>
+		</div>
+	</body>
+</html>
